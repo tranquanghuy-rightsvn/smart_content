@@ -3,7 +3,7 @@
  * Chỉ vùng có thuộc tính data-review mới góp ý được (header, menu, footer thì không).
  *
  * Luồng: khách bôi đen chữ (hoặc chạm vào 1 đoạn) -> chọn yêu cầu nhanh + ghi chú -> lưu.
- * Admin mở link kèm ?admin=<ADMIN_KEY> một lần (trình duyệt tự nhớ) -> bấm "Đã sửa" + ghi chú.
+ * Editor mở cùng link, đọc góp ý, sửa bài, bấm "Đã sửa" (kèm ghi chú nếu muốn). Không có tài khoản/admin.
  * Khách kiểm tra lại: ưng thì xoá góp ý, chưa ưng thì bấm "Chưa đúng" để mở lại.
  */
 (() => {
@@ -25,15 +25,6 @@
     set: (k, v) => { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch { /* chế độ ẩn danh */ } },
   };
 
-  // ---------- admin ----------
-  const qs = new URLSearchParams(location.search);
-  if (qs.has('admin')) {
-    ls.set('rv_admin_key', qs.get('admin'));
-    qs.delete('admin');
-    history.replaceState(null, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash);
-  }
-  let adminKey = ls.get('rv_admin_key');
-  let isAdmin = false;
 
   // ---------- helpers ----------
   const h = (tag, attrs = {}, ...kids) => {
@@ -49,7 +40,6 @@
   };
   const req = async (method, url, data) => {
     const headers = { 'content-type': 'application/json' };
-    if (adminKey) headers['x-admin-key'] = adminKey;
     const res = await fetch(url, { method, headers, body: data ? JSON.stringify(data) : undefined });
     const j = await res.json().catch(() => ({ ok: false, error: 'network' }));
     if (!j.ok) throw new Error(j.error || 'error');
@@ -69,7 +59,7 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { toastEl.className = 'rv-toast'; }, 2600);
   };
-  const ERR = { missing_note: 'Chọn ít nhất 1 yêu cầu hoặc ghi chú giúp nhé', forbidden: 'Chỉ Editor mới làm được thao tác này', network: 'Mất kết nối, thử lại giúp nhé' };
+  const ERR = { missing_note: 'Chọn ít nhất 1 yêu cầu hoặc ghi chú giúp nhé', network: 'Mất kết nối, thử lại giúp nhé' };
 
   // ---------- đoạn văn ----------
   let blocks = [];
@@ -304,10 +294,9 @@
   // Danh sách góp ý
   const list = h('div', { class: 'rv-list' });
   const tabs = h('div', { class: 'rv-tabs' });
-  const adminTag = h('span', { class: 'rv-admin', hidden: true }, 'Admin');
   const panel = h('aside', { class: 'rv-panel rv-ui', 'aria-label': 'Danh sách góp ý' },
     h('div', { class: 'rv-panel-head' },
-      h('b', {}, 'Góp ý nội dung'), adminTag,
+      h('b', {}, 'Góp ý nội dung'),
       h('button', { type: 'button', class: 'rv-icon', title: 'Hướng dẫn', onclick: () => intro.classList.add('is-on') }, '?'),
       h('button', { type: 'button', class: 'rv-icon', title: 'Tải lại', onclick: () => load() }, '↻'),
       h('button', { type: 'button', class: 'rv-x', 'aria-label': 'Đóng', onclick: () => closePanel() }, '×')),
@@ -355,7 +344,7 @@
   const card = (c) => {
     const actions = h('div', { class: 'rv-actions' });
     if (!c.lost) actions.append(h('button', { type: 'button', class: 'rv-btn rv-btn--sm', onclick: () => goTo(c) }, 'Xem trong bài'));
-    if (isAdmin && c.status === 'open') {
+    if (c.status === 'open') {
       const reply = h('textarea', { class: 'rv-input', rows: 2, maxlength: 1000, placeholder: 'Ghi chú khi sửa xong (không bắt buộc)' });
       const box = h('div', { class: 'rv-replybox', hidden: true }, reply,
         h('button', { type: 'button', class: 'rv-btn rv-btn--sm rv-btn--primary', onclick: () => act(() => req('PATCH', API + '/' + c.id, { status: 'fixed', reply: reply.value }), 'Đã đánh dấu sửa xong') }, 'Xác nhận đã sửa'));
@@ -363,12 +352,9 @@
       actions.append(confirmBtn('Xoá', 'rv-btn--danger', () => act(() => req('DELETE', API + '/' + c.id), 'Đã xoá góp ý')));
       return wrapCard(c, actions, box);
     }
-    if (c.status === 'fixed') {
-      actions.append(h('button', { type: 'button', class: 'rv-btn rv-btn--sm', onclick: () => act(() => req('PATCH', API + '/' + c.id, { status: 'open' }), 'Đã mở lại, Editor sẽ sửa tiếp') }, 'Chưa đúng, sửa lại'));
-      actions.append(confirmBtn('✓ Đã ưng, xoá góp ý', 'rv-btn--ok', () => act(() => req('DELETE', API + '/' + c.id), 'Đã xoá góp ý')));
-    } else {
-      actions.append(confirmBtn('Xoá', 'rv-btn--danger', () => act(() => req('DELETE', API + '/' + c.id), 'Đã xoá góp ý')));
-    }
+    // Đã sửa: khách kiểm tra lại, ưng thì xoá, chưa ưng thì mở lại
+    actions.append(h('button', { type: 'button', class: 'rv-btn rv-btn--sm', onclick: () => act(() => req('PATCH', API + '/' + c.id, { status: 'open' }), 'Đã mở lại, Editor sẽ sửa tiếp') }, 'Chưa đúng, sửa lại'));
+    actions.append(confirmBtn('✓ Đã ưng, xoá góp ý', 'rv-btn--ok', () => act(() => req('DELETE', API + '/' + c.id), 'Đã xoá góp ý')));
     return wrapCard(c, actions);
   };
   const wrapCard = (c, actions, extra) => h('div', {
@@ -389,7 +375,7 @@
   const renderList = () => {
     const open = items.filter((c) => c.status === 'open').length, fixed = items.length - open;
     countEl.textContent = items.length ? `(${open} chờ sửa${fixed ? ', ' + fixed + ' đã sửa' : ''})` : '';
-    fab.classList.toggle('has-fixed', fixed > 0 && !isAdmin);
+    fab.classList.toggle('has-fixed', fixed > 0);
     tabs.replaceChildren(...[['all', 'Tất cả', items.length], ['open', 'Chờ sửa', open], ['fixed', 'Đã sửa', fixed]].map(([k, label, n]) =>
       h('button', { type: 'button', class: 'rv-tabbtn' + (filter === k ? ' is-on' : ''), onclick: () => { filter = k; renderList(); } }, `${label} (${n})`)));
     const shown = items.filter((c) => filter === 'all' || c.status === filter);
@@ -404,12 +390,6 @@
   // ---------- khởi động ----------
   indexBlocks();
   (async () => {
-    if (adminKey) {
-      try { isAdmin = (await req('GET', '/api/me')).admin; } catch { isAdmin = false; }
-      if (!isAdmin) { ls.set('rv_admin_key', ''); adminKey = ''; }
-      adminTag.hidden = !isAdmin;
-      document.documentElement.classList.toggle('rv-is-admin', isAdmin);
-    }
     await load();
   })();
   document.addEventListener('visibilitychange', () => { if (!document.hidden) load(true); });

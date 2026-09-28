@@ -2,7 +2,7 @@
 
 Trang nháp để khách duyệt nội dung trước khi Web100 đăng lên website chính của khách.
 Khách bôi đen chữ (hoặc bấm vào một đoạn) để góp ý: tô màu, in đậm, bỏ đoạn, viết lại...
-Web100 mở cùng link là thấy góp ý ngay trên bài, sửa xong bấm "Đã sửa"; khách kiểm tra lại,
+Editor mở cùng link là thấy góp ý ngay trên bài, sửa xong bấm "Đã sửa"; khách kiểm tra lại,
 ưng thì xoá góp ý, chưa ưng thì bấm "Chưa đúng, sửa lại".
 
 - URL bài: `https://contents.web100.vn/<domain>/<slug>/`
@@ -18,7 +18,6 @@ Web100 mở cùng link là thấy góp ý ngay trên bài, sửa xong bấm "Đ�
 public/
   _headers                     noindex cho mọi đường dẫn
   index.html                   trang chủ: chỉ 1 dòng "Trang Smart content của Web100"
-  admin/index.html             các bài đang có góp ý (nhập admin key), không có link trỏ tới
   404.html
   _review/review.js, .css      công cụ góp ý, dùng chung cho mọi bài
   <domain>/
@@ -43,37 +42,24 @@ migrations/                    cấu trúc bảng D1
 4. `git add`, `commit`, `push` là Cloudflare tự deploy.
 5. Gửi link cho khách. Khi khách duyệt xong và bài đã đăng lên site chính, xoá thư mục bài nháp.
 
-## Admin
+## Ai làm được gì
 
-- Mở bất kỳ bài nào kèm `?admin=<ADMIN_KEY>` **một lần**: trình duyệt tự nhớ, link tự bỏ phần
-  key đi. Sau đó panel góp ý có nhãn "Admin" và nút "✓ Đã sửa" (kèm ghi chú gửi khách).
-- Danh sách mọi bài đang có góp ý: `https://contents.web100.vn/admin/` (nhập admin key).
-- Khách (không có key) chỉ thêm góp ý, xoá góp ý, và mở lại góp ý đã sửa.
+Không có tài khoản, không có trang admin. Ai có link bài nháp đều: thêm góp ý, đọc góp ý, bấm
+"✓ Đã sửa" (kèm ghi chú), mở lại ("Chưa đúng, sửa lại") và xoá góp ý.
 
-## Cài đặt lần đầu trên Cloudflare (làm 1 lần)
+## Cài đặt trên Cloudflare (đã làm 2026-09-28)
 
-1. Tạo database D1:
-   ```bash
-   npx wrangler login
-   npx wrangler d1 create web100-contents
-   ```
-   Copy `database_id` in ra, dán vào `wrangler.jsonc` (thay chuỗi `00000000-...`).
-2. Tạo bảng trên D1 thật: `npm run db:migrate`
-3. Deploy lần đầu và đặt admin key:
-   ```bash
-   npx wrangler deploy                 # tạo Worker web100-contents + gắn contents.web100.vn
-   npx wrangler secret put ADMIN_KEY   # nhập 1 chuỗi dài, khó đoán
-   ```
-   Domain `web100.vn` đã nằm trên Cloudflare nên `contents.web100.vn` được gắn tự động
-   (khai trong `routes` của `wrangler.jsonc`).
-4. Tự deploy khi push: Cloudflare Dashboard > Workers & Pages > `web100-contents` > Settings >
-   Build > kết nối repo Git này (build command để trống, deploy command `npx wrangler deploy`).
+- Database D1 `web100-contents` (ID trong `wrangler.jsonc`) đã tạo và đã có bảng
+  (`npm run db:migrate` khi thêm migration mới).
+- Worker `smart-content`, kết nối repo Git này (Workers Builds, deploy command `npx wrangler deploy`):
+  push là tự deploy.
+- **Chưa gắn domain.** Khi sẵn sàng: Dashboard > Workers & Pages > `smart-content` > Settings >
+  Domains & Routes > thêm `contents.web100.vn`. Trước đó xem thử qua địa chỉ `*.workers.dev`.
 
 ## Chạy thử trên máy
 
 ```bash
 npm install
 npm run db:migrate:local
-echo "ADMIN_KEY=local-admin-key" > .dev.vars
 npm run dev    # http://localhost:8787/tretruc.com.vn/thi-cong-nha-tre-choi-tre-tron-goi/
 ```

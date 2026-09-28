@@ -68,8 +68,6 @@ figure.rv-fig{position:relative}
 .rv-panel.is-on{transform:none}
 .rv-panel-head{display:flex;align-items:center;gap:8px;padding:16px 16px 10px;font-size:18px}
 .rv-panel-head b{margin-right:auto}
-.rv-admin{font-size:12px;font-weight:800;background:var(--rv-ink);color:#ffe066;padding:3px 8px;border-radius:6px}
-.rv-admin[hidden]{display:none}
 .rv-tabs{display:flex;gap:6px;padding:0 16px 10px;flex-wrap:wrap}
 .rv-tabbtn{border:0;background:#e9eeeb;color:var(--rv-muted);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer}
 .rv-tabbtn.is-on{background:var(--rv-ink);color:#fff}

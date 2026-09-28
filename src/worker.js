@@ -2,12 +2,10 @@
 //
 //   GET    /api/comments?page=/<domain>/<slug>/   danh sách góp ý của 1 trang (ai có link cũng xem)
 //   POST   /api/comments                          khách thêm góp ý
-//   PATCH  /api/comments/:id                      {status:'fixed', reply} cần admin; {status:'open'} ai cũng được (khách thấy chưa đúng)
-//   DELETE /api/comments/:id                      khách (hoặc admin) xoá khi đã ưng
-//   GET    /api/admin/pages                       admin: các trang đang có góp ý
-//   GET    /api/me                                admin key có đúng không
+//   PATCH  /api/comments/:id                      {status:'fixed'|'open', reply}: Editor đánh dấu đã sửa / khách mở lại
+//   DELETE /api/comments/:id                      khách xoá khi đã ưng
 //
-// Admin = gửi header X-Admin-Key khớp secret ADMIN_KEY (wrangler secret put ADMIN_KEY).
+// Ai có link bài nháp đều góp ý, đọc, đánh dấu và xoá được (không có tài khoản, không có admin).
 
 const NOINDEX = 'noindex, nofollow, noarchive, nosnippet, noimageindex';
 const PAGE_RE = /^\/[a-z0-9.-]+\/[a-z0-9-]+\/$/;
@@ -29,22 +27,6 @@ export default {
 async function api(request, env, url) {
   const { pathname } = url;
   const method = request.method;
-  const admin = await isAdmin(request, env);
-
-  if (pathname === '/api/me' && method === 'GET') return json({ ok: true, admin });
-
-  if (pathname === '/api/admin/pages' && method === 'GET') {
-    if (!admin) return json({ ok: false, error: 'forbidden' }, 403);
-    const { results } = await env.DB.prepare(
-      `SELECT page,
-              SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END)  AS open,
-              SUM(CASE WHEN status = 'fixed' THEN 1 ELSE 0 END) AS fixed,
-              MAX(updated_at) AS last
-         FROM comments GROUP BY page ORDER BY last DESC`
-    ).all();
-    return json({ ok: true, pages: results });
-  }
-
   if (pathname === '/api/comments' && method === 'GET') {
     const page = url.searchParams.get('page') || '';
     if (!PAGE_RE.test(page)) return json({ ok: false, error: 'invalid_page' }, 400);
@@ -101,11 +83,7 @@ async function api(request, env, url) {
       const b = await body(request);
       if (!b) return json({ ok: false, error: 'invalid_json' }, 400);
       const status = b.status === 'fixed' || b.status === 'open' ? b.status : row.status;
-      let reply = row.reply;
-      if (b.reply !== undefined || status === 'fixed') {
-        if (!admin) return json({ ok: false, error: 'forbidden' }, 403);
-        if (b.reply !== undefined) reply = str(b.reply, MAX.reply).trim();
-      }
+      const reply = b.reply !== undefined ? str(b.reply, MAX.reply).trim() : row.reply;
       const now = new Date().toISOString();
       await env.DB.prepare('UPDATE comments SET status = ?, reply = ?, updated_at = ? WHERE id = ?')
         .bind(status, reply, now, id).run();
@@ -120,13 +98,6 @@ function out(r) {
   let tags = [];
   try { tags = JSON.parse(r.tags || '[]'); } catch { /* dữ liệu hỏng thì coi như không có tag */ }
   return { ...r, tags };
-}
-
-async function isAdmin(request, env) {
-  const key = request.headers.get('x-admin-key') || '';
-  if (!env.ADMIN_KEY || !key) return false;
-  const a = new TextEncoder().encode(key), b = new TextEncoder().encode(env.ADMIN_KEY);
-  return a.byteLength === b.byteLength && crypto.subtle.timingSafeEqual(a, b);
 }
 
 async function body(request) {

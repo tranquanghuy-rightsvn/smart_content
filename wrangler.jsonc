@@ -7,8 +7,9 @@
   "name": "smart-content",
   "main": "src/worker.js",
   "compatibility_date": "2026-09-01",
-  "routes": [{ "pattern": "contents.web100.vn", "custom_domain": true }],
-  "workers_dev": false,
+  // Chưa gắn domain: gắn contents.web100.vn trong Cloudflare Dashboard khi sẵn sàng.
+  // Trước đó xem thử qua địa chỉ smart-content.<tài-khoản>.workers.dev
+  "workers_dev": true,
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
