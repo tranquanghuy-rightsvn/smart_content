@@ -41,3 +41,9 @@
   .tv-slider-btn--prev{left:10px}.tv-slider-btn--next{right:10px}
 }
 @media (prefers-reduced-motion:reduce){.tv-slide-media img,.tv-slide-body{transition:none}.post-detail-body .tv-slider-track{scroll-behavior:auto}}
+
+/* Logo Tre Việt góc trên trái của KHUNG ảnh (không gắn vào file ảnh): ảnh bị cắt theo khung
+   (object-fit: cover) thì logo vẫn luôn hiện đủ. Cỡ logo = --tv-logo-ratio x bề ngang khung
+   (width theo phần trăm của khung chứa), nên ảnh to logo to, ảnh nhỏ logo nhỏ, cùng 1 tỉ lệ.
+   Đường dẫn tương đối: bản nháp _assets/css -> _assets/images, site thật html/css -> html/images. */
+.tv-slide-media::before{content:"";position:absolute;z-index:2;top:5px;left:5px;width:var(--tv-logo-ratio,10%);aspect-ratio:783/648;background:url("../images/logo.webp") center/contain no-repeat;pointer-events:none}

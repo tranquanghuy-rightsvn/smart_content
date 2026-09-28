@@ -3,6 +3,9 @@
    .tv-faq     câu hỏi thường gặp dạng mở/đóng (<details>, không cần JS)
    .tv-contact thẻ thông tin công ty */
 
+/* Tỉ lệ logo so với bề ngang khung ảnh, dùng chung cho ảnh slider + thẻ mẫu (1/10) */
+:root{--tv-logo-ratio:10%}
+
 /* ---------- Mẫu nhà ---------- */
 .tv-models{display:flex;flex-direction:column;gap:22px;margin:8px 0 36px}
 .tv-model{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);border-radius:20px;overflow:hidden;background:#fff;border:1px solid rgba(47,107,58,.14);box-shadow:0 10px 28px rgba(31,74,39,.08);transition:box-shadow .25s ease,transform .25s ease}
@@ -87,3 +90,9 @@
   .tv-contact-cta{padding:16px 18px}
   .post-detail-body .tv-btn{flex:1 1 100%;justify-content:center;white-space:nowrap}
 }
+
+/* Logo Tre Việt góc trên trái của KHUNG ảnh (không gắn vào file ảnh): ảnh bị cắt theo khung
+   (object-fit: cover) thì logo vẫn luôn hiện đủ. Cỡ logo = --tv-logo-ratio x bề ngang khung
+   (width theo phần trăm của khung chứa), nên ảnh to logo to, ảnh nhỏ logo nhỏ, cùng 1 tỉ lệ.
+   Đường dẫn tương đối: bản nháp _assets/css -> _assets/images, site thật html/css -> html/images. */
+.tv-model-media::before{content:"";position:absolute;z-index:2;top:5px;left:5px;width:var(--tv-logo-ratio,10%);aspect-ratio:783/648;background:url("../images/logo.webp") center/contain no-repeat;pointer-events:none}

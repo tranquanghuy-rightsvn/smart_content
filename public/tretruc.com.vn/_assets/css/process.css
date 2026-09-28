@@ -31,7 +31,7 @@
 .tv-step-out{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:5px 12px;border-radius:999px;background:rgba(143,201,58,.16);color:var(--color-primary-dark);font-size:13px;font-weight:700}
 .tv-step-out svg{width:15px;height:15px}
 .tv-step:last-child .tv-step-card{margin-bottom:0}
-.tv-process-note{display:flex;align-items:center;gap:12px;margin-top:22px;padding:14px 18px;border-radius:14px;background:var(--color-cream);border:1px dashed rgba(47,107,58,.3);font-size:15px;line-height:1.55;color:var(--color-text)}
+.post-detail-body .tv-process-note{display:flex;align-items:center;gap:12px;margin:30px 0 0;padding:14px 18px;border-radius:14px;background:var(--color-cream);border:1px dashed rgba(47,107,58,.3);font-size:15px;line-height:1.55;color:var(--color-text)}
 .tv-process-note svg{flex:none;width:26px;height:26px;color:var(--color-primary)}
 
 /* Hiện dần từng bước khi cuộn tới (trình duyệt hỗ trợ scroll-driven animation) */

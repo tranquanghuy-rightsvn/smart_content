@@ -4,6 +4,7 @@
 //   POST   /api/comments                          khách thêm góp ý
 //   PATCH  /api/comments/:id                      {status:'fixed'|'open', reply}: Editor đánh dấu đã sửa / khách mở lại
 //   DELETE /api/comments/:id                      khách xoá khi đã ưng
+//   GET    /api/counts?domain=<domain>             số góp ý (chờ sửa / đã sửa) của từng bài trong 1 domain
 //
 // Ai có link bài nháp đều góp ý, đọc, đánh dấu và xoá được (không có tài khoản, không có admin).
 
@@ -27,6 +28,18 @@ export default {
 async function api(request, env, url) {
   const { pathname } = url;
   const method = request.method;
+  if (pathname === '/api/counts' && method === 'GET') {
+    const domain = url.searchParams.get('domain') || '';
+    if (!/^[a-z0-9.-]+$/.test(domain)) return json({ ok: false, error: 'invalid_domain' }, 400);
+    const { results } = await env.DB.prepare(
+      `SELECT page,
+              SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END)  AS open,
+              SUM(CASE WHEN status = 'fixed' THEN 1 ELSE 0 END) AS fixed
+         FROM comments WHERE page LIKE ? GROUP BY page`
+    ).bind('/' + domain + '/%').all();
+    return json({ ok: true, counts: results });
+  }
+
   if (pathname === '/api/comments' && method === 'GET') {
     const page = url.searchParams.get('page') || '';
     if (!PAGE_RE.test(page)) return json({ ok: false, error: 'invalid_page' }, 400);

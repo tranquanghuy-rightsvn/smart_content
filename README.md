@@ -21,6 +21,8 @@ public/
   404.html
   _review/review.js, .css      công cụ góp ý, dùng chung cho mọi bài
   <domain>/
+    index.html                 bảng bài của domain: STT, link, số góp ý, trạng thái (Đã duyệt / Đang chỉnh sửa)
+    posts.json                 danh sách bài + trạng thái ("editing" | "approved"), sửa tay
     _assets/                   CSS, JS, font copy từ site thật của khách (để bài nháp trông y hệt)
     <slug>/index.html          bài nháp
 src/worker.js                  API góp ý (/api/*), lưu trong Cloudflare D1
@@ -29,7 +31,8 @@ migrations/                    cấu trúc bảng D1
 
 ## Thêm một bài nháp mới
 
-1. Tạo `public/<domain>/<slug>/index.html` (copy bài có sẵn của cùng domain rồi thay nội dung).
+1. Thêm bài vào `public/<domain>/posts.json` (`status: "editing"`, duyệt xong đổi `"approved"`).
+   Tạo `public/<domain>/<slug>/index.html` (copy bài có sẵn của cùng domain rồi thay nội dung).
    Domain mới thì tạo thêm `public/<domain>/_assets/` với CSS/JS/font của site đó.
 2. Trong `<head>` phải có:
    ```html

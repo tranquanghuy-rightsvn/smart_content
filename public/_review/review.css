@@ -15,7 +15,7 @@ figure.rv-fig{position:relative}
 .rv-fig{outline:4px solid #e0b400;outline-offset:-4px;border-radius:8px;cursor:pointer}
 .rv-fig.rv-fixed{outline-color:var(--rv-green)}
 .rv-fig.rv-active{outline-color:var(--rv-blue)}
-.rv-fig::after{content:attr(data-n);position:absolute;z-index:3;top:12px;left:12px;min-width:28px;height:28px;border-radius:14px;background:#e0b400;color:#fff;font:700 14px/28px sans-serif;text-align:center}
+.rv-fig::after{content:attr(data-n);position:absolute;z-index:3;top:12px;left:50%;transform:translateX(-50%);min-width:28px;height:28px;border-radius:14px;background:#e0b400;color:#fff;font:700 14px/28px sans-serif;text-align:center}
 .rv-fig.rv-fixed::after{background:var(--rv-green)}
 
 /* Pop-up hướng dẫn lần đầu */
