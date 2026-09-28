@@ -17,7 +17,8 @@ Web100 mở cùng link là thấy góp ý ngay trên bài, sửa xong bấm "Đ�
 ```
 public/
   _headers                     noindex cho mọi đường dẫn
-  index.html                   trang admin: các bài đang có góp ý (cần admin key)
+  index.html                   trang chủ: chỉ 1 dòng "Trang Smart content của Web100"
+  admin/index.html             các bài đang có góp ý (nhập admin key), không có link trỏ tới
   404.html
   _review/review.js, .css      công cụ góp ý, dùng chung cho mọi bài
   <domain>/
@@ -46,7 +47,7 @@ migrations/                    cấu trúc bảng D1
 
 - Mở bất kỳ bài nào kèm `?admin=<ADMIN_KEY>` **một lần**: trình duyệt tự nhớ, link tự bỏ phần
   key đi. Sau đó panel góp ý có nhãn "Admin" và nút "✓ Đã sửa" (kèm ghi chú gửi khách).
-- Danh sách mọi bài đang có góp ý: `https://contents.web100.vn/` (nhập admin key).
+- Danh sách mọi bài đang có góp ý: `https://contents.web100.vn/admin/` (nhập admin key).
 - Khách (không có key) chỉ thêm góp ý, xoá góp ý, và mở lại góp ý đã sửa.
 
 ## Cài đặt lần đầu trên Cloudflare (làm 1 lần)

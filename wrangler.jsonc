@@ -4,7 +4,7 @@
 // src/worker.js chỉ chạy cho /api/* (lưu/đọc góp ý trong D1).
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "web100-contents",
+  "name": "smart-content",
   "main": "src/worker.js",
   "compatibility_date": "2026-09-01",
   "routes": [{ "pattern": "contents.web100.vn", "custom_domain": true }],
@@ -20,8 +20,7 @@
     {
       "binding": "DB",
       "database_name": "web100-contents",
-      // Điền ID thật sau khi chạy: npx wrangler d1 create web100-contents (xem README.md)
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "4c9ea511-12e8-492d-873c-400e5f5100ae",
       "migrations_dir": "migrations"
     }
   ]
