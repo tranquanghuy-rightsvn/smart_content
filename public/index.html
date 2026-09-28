@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<title>Web100 Contents</title>
+<style>
+  :root{--ink:#15201a;--muted:#5b6b63;--line:#e3e8e5;--g:#0bcb68;--g2:#078c46}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f2fbf6;color:var(--ink)}
+  main{max-width:880px;margin:0 auto;padding:48px 16px}
+  h1{font-size:28px;margin:0 0 6px}
+  p{color:var(--muted);line-height:1.6;margin:0 0 20px}
+  form{display:flex;gap:10px;flex-wrap:wrap}
+  input{flex:1;min-width:220px;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-size:15px}
+  button{border:0;border-radius:12px;padding:12px 18px;font-size:15px;font-weight:700;background:var(--ink);color:#fff;cursor:pointer}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;margin-top:24px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);font-size:15px}
+  th{background:#e7fbf0;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  td a{color:var(--g2);font-weight:600;word-break:break-all}
+  .open{color:#a16207;font-weight:800}.fixed{color:var(--g2);font-weight:800}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<main>
+  <h1>Web100 Contents</h1>
+  <p>Trang nháp để khách duyệt nội dung trước khi đăng lên website chính. Toàn bộ trang ở đây không được Google index.</p>
+  <form id="f"><input id="k" type="password" placeholder="Admin key" autocomplete="current-password"><button>Xem các trang có góp ý</button></form>
+  <p id="msg" class="hide"></p>
+  <table id="t" class="hide"><thead><tr><th>Trang</th><th>Chờ sửa</th><th>Đã sửa</th><th>Cập nhật</th></tr></thead><tbody></tbody></table>
+</main>
+<script>
+  const f = document.getElementById('f'), k = document.getElementById('k'), t = document.getElementById('t'), msg = document.getElementById('msg');
+  const get = () => { try { return localStorage.getItem('rv_admin_key') || ''; } catch { return ''; } };
+  const set = (v) => { try { v ? localStorage.setItem('rv_admin_key', v) : localStorage.removeItem('rv_admin_key'); } catch {} };
+  async function load(key) {
+    const r = await fetch('/api/admin/pages', { headers: { 'x-admin-key': key } }).then((r) => r.json()).catch(() => ({ ok: false }));
+    if (!r.ok) { set(''); msg.textContent = 'Admin key không đúng.'; msg.className = ''; t.className = 'hide'; return; }
+    set(key); f.className = 'hide'; msg.className = 'hide';
+    const tb = t.querySelector('tbody');
+    tb.replaceChildren(...(r.pages.length ? r.pages.map((p) => {
+      const tr = document.createElement('tr');
+      const a = Object.assign(document.createElement('a'), { href: p.page, textContent: p.page });
+      const cells = [a, Object.assign(document.createElement('span'), { className: 'open', textContent: p.open }),
+        Object.assign(document.createElement('span'), { className: 'fixed', textContent: p.fixed }), new Date(p.last).toLocaleString('vi-VN')];
+      cells.forEach((c) => { const td = document.createElement('td'); td.append(c); tr.append(td); });
+      return tr;
+    }) : [Object.assign(document.createElement('tr'), { innerHTML: '<td colspan="4">Chưa có góp ý nào.</td>' })]));
+    t.className = '';
+  }
+  f.addEventListener('submit', (e) => { e.preventDefault(); load(k.value.trim()); });
+  if (get()) load(get());
+</script>
+</body>
+</html>

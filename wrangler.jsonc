@@ -1,0 +1,28 @@
+// contents.web100.vn — trang nháp để khách duyệt nội dung trước khi đăng lên site chính.
+// Toàn bộ subdomain KHÔNG index (xem public/_headers + header trong src/worker.js).
+// public/ là HTML/CSS tĩnh (git push là Cloudflare Workers Builds tự deploy);
+// src/worker.js chỉ chạy cho /api/* (lưu/đọc góp ý trong D1).
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "web100-contents",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+  "routes": [{ "pattern": "contents.web100.vn", "custom_domain": true }],
+  "workers_dev": false,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "web100-contents",
+      // Điền ID thật sau khi chạy: npx wrangler d1 create web100-contents (xem README.md)
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
