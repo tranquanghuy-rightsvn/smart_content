@@ -6,6 +6,11 @@
 /* Tỉ lệ logo so với bề ngang khung ảnh, dùng chung cho ảnh slider + thẻ mẫu (1/10) */
 :root{--tv-logo-ratio:10%}
 
+/* ---------- Icon trước tiêu đề H2 ---------- */
+.post-detail-body h2:has(> .tv-h2-ico){display:flex;align-items:center;gap:14px}
+.tv-h2-ico{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(143,201,58,.2);color:var(--color-primary)}
+.tv-h2-ico svg{width:24px;height:24px}
+
 /* ---------- Mẫu nhà ---------- */
 .tv-models{display:flex;flex-direction:column;gap:22px;margin:8px 0 36px}
 .tv-model{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);border-radius:20px;overflow:hidden;background:#fff;border:1px solid rgba(47,107,58,.14);box-shadow:0 10px 28px rgba(31,74,39,.08);transition:box-shadow .25s ease,transform .25s ease}
@@ -72,6 +77,9 @@
 .post-detail-body .tv-btn--zalo:hover{color:#fff}
 
 @media (max-width:640px){
+  .post-detail-body h2:has(> .tv-h2-ico){gap:10px}
+  .tv-h2-ico{width:36px;height:36px;border-radius:11px}
+  .tv-h2-ico svg{width:20px;height:20px}
   .tv-model{grid-template-columns:1fr}
   .tv-model:nth-child(even) .tv-model-figure{order:0}
   .tv-model-media{flex:none;aspect-ratio:4/3;min-height:0}
