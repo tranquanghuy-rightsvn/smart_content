@@ -385,7 +385,7 @@
   document.body.append(chip, composer, panel, fab, toastEl, intro);
   if (!ls.get('rv_intro_seen')) intro.classList.add('is-on');
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (intro.classList.contains('is-on')) closeIntro(); closeComposer(); hideChip(); } });
-  root.querySelectorAll('a[href]').forEach((a) => { a.target = '_blank'; });
+  root.querySelectorAll('a[href]:not([href^="#"])').forEach((a) => { a.target = '_blank'; });
 
   // ---------- khởi động ----------
   indexBlocks();
