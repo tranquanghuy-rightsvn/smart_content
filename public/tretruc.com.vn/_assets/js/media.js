@@ -82,13 +82,13 @@
     const btn = box.querySelector('.tv-lightbox-close');
     if (btn) btn.focus();
   }
-  // Nhóm ảnh bấm phóng to: dải ảnh tv-gallery và thẻ công trình tv-proof (chú thích = tên công trình)
-  document.querySelectorAll('.tv-gallery[data-gallery], .tv-proof[data-gallery]').forEach((g) => {
-    const medias = Array.prototype.slice.call(g.querySelectorAll('.tv-gallery-media, .tv-proof-media'));
+  // Nhóm ảnh bấm phóng to: dải ảnh tv-gallery, thẻ công trình tv-proof (chú thích = tên công trình), bản vẽ tv-plan
+  document.querySelectorAll('.tv-gallery[data-gallery], .tv-proof[data-gallery], .tv-plan[data-gallery]').forEach((g) => {
+    const medias = Array.prototype.slice.call(g.querySelectorAll('.tv-gallery-media, .tv-proof-media, .tv-plan-media'));
     const items = medias.map((m) => {
       const img = m.querySelector('img');
       const card = m.closest('.tv-proof-card');
-      const cap = card ? card.querySelector('h3') : m.parentNode.querySelector('.tv-gallery-cap');
+      const cap = card ? card.querySelector('h3') : m.parentNode.querySelector('.tv-gallery-cap, .tv-plan-cap');
       return { full: m.getAttribute('data-full') || (img && img.currentSrc) || (img && img.src), alt: img ? img.alt : '', cap: cap ? cap.textContent.trim() : '' };
     });
     medias.forEach((m, i) => {
