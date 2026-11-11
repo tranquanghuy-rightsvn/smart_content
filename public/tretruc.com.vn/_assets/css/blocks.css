@@ -234,6 +234,9 @@
 .post-detail-body ol.tv-proof{margin:26px 0 22px}
 .post-detail-body ul.tv-gallery-track>li,.post-detail-body ul.tv-harms>li,.post-detail-body ol.tv-proof>li{padding:0;margin:0}
 .post-detail-body ul.tv-gallery-track>li::before,.post-detail-body ul.tv-harms>li::before,.post-detail-body ol.tv-proof>li::before{content:none;display:none}
+/* Ảnh không đủ 1 hàng: căn giữa (margin auto chia đều chỗ trống; khi ảnh tràn để trượt thì margin = 0) */
+.post-detail-body ul.tv-gallery-track>li.tv-gallery-item:first-child{margin-left:auto}
+.post-detail-body ul.tv-gallery-track>li.tv-gallery-item:last-child{margin-right:auto}
 .post-detail-body ul.tv-harms>li.tv-harm{padding:16px 18px}
 @media (max-width:640px){.post-detail-body ul.tv-harms>li.tv-harm{padding:14px}}
 
@@ -294,3 +297,15 @@
 .tv-plan-media{display:block;cursor:zoom-in;border-radius:8px;overflow:hidden}
 .tv-plan-media img{display:block;width:100%;height:auto}
 .post-detail-body .tv-plan figcaption.tv-plan-cap{margin:10px 0 0;font-size:14px;color:var(--color-text-muted);text-align:center;font-style:italic}
+
+/* ---------- Ảnh đơn lẻ trong tv-gallery: không đánh số ---------- */
+.tv-gallery-item:only-child .tv-gallery-no{display:none}
+
+/* ---------- Logo góc phải trên ảnh (bài có class tv-wm trên .post-detail-body) ----------
+   Logo là lớp CSS phủ lên khung (không ghép vào file) nên ảnh bị cắt theo khung vẫn hiện đủ logo.
+   Cỡ = --tv-logo-ratio x bề ngang khung, có cỡ tối thiểu để ảnh nhỏ vẫn đọc được. */
+.tv-wm .tv-gallery-media::before,.tv-wm .tv-video-frame::after,.tv-lightbox--wm .tv-lightbox-frame::after{content:"";position:absolute;z-index:3;top:6px;right:6px;width:var(--tv-logo-ratio,10%);min-width:40px;aspect-ratio:783/648;background:url("../images/logo.webp") center/contain no-repeat;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.tv-wm .tv-video-frame::after{min-width:56px}
+.tv-lightbox-frame{position:relative;display:inline-flex;max-width:min(1280px,100%);max-height:100%}
+.tv-lightbox-frame img{max-width:100%;max-height:calc(100vh - 112px)}
+.tv-lightbox--wm .tv-lightbox-frame::after{min-width:52px;top:10px;right:10px}
