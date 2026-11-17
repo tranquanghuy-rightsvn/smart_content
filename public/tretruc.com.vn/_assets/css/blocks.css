@@ -304,8 +304,10 @@
 /* ---------- Logo góc phải trên ảnh (bài có class tv-wm trên .post-detail-body) ----------
    Logo là lớp CSS phủ lên khung (không ghép vào file) nên ảnh bị cắt theo khung vẫn hiện đủ logo.
    Cỡ = --tv-logo-ratio x bề ngang khung, có cỡ tối thiểu để ảnh nhỏ vẫn đọc được. */
-.tv-wm .tv-gallery-media::before,.tv-wm .tv-video-frame::after,.tv-lightbox--wm .tv-lightbox-frame::after{content:"";position:absolute;z-index:3;top:6px;right:6px;width:var(--tv-logo-ratio,10%);min-width:40px;aspect-ratio:783/648;background:url("../images/logo.webp") center/contain no-repeat;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.tv-wm .tv-gallery-media::before,.tv-wm .tv-plan-media::before,.tv-wm .tv-video-frame::after,.tv-lightbox--wm .tv-lightbox-frame::after{content:"";position:absolute;z-index:3;top:6px;right:6px;width:var(--tv-logo-ratio,10%);min-width:40px;aspect-ratio:783/648;background:url("../images/logo.webp") center/contain no-repeat;pointer-events:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
 .tv-wm .tv-video-frame::after{min-width:56px}
+.tv-wm .tv-plan-media{position:relative}
+.post-detail-body .tv-contact-head h3 a{color:inherit;text-decoration:none}
 .tv-lightbox-frame{position:relative;display:inline-flex;max-width:min(1280px,100%);max-height:100%}
 .tv-lightbox-frame img{max-width:100%;max-height:calc(100vh - 112px)}
 .tv-lightbox--wm .tv-lightbox-frame::after{min-width:52px;top:10px;right:10px}

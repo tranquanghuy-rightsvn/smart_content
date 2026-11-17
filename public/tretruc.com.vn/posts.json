@@ -7,11 +7,21 @@
   {
     "slug": "thi-cong-nha-tre-tam-vong-uon-cong",
     "title": "Thi Công Nhà Tre Tầm Vông Uốn Cong Quán Cafe Nha Trang",
-    "status": "editing"
+    "status": "approved"
   },
   {
     "slug": "quy-trinh-xu-ly-tre-luong",
     "title": "Quy Trình Xử Lý Tre Luồng Chống Mối Mọt Chuẩn Kỹ Thuật",
+    "status": "approved"
+  },
+  {
+    "slug": "cay-le-rung",
+    "title": "Cây Le Rừng",
+    "status": "approved"
+  },
+  {
+    "slug": "ket-cau-tre-trong-xay-dung",
+    "title": "Kết Cấu Tre Trong Xây Dựng: Cấu Tạo, Lưu Ý Và Công Trình Thực Tế",
     "status": "editing"
   }
 ]
