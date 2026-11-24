@@ -333,3 +333,24 @@
 .tv-lightbox-frame{position:relative;display:inline-flex;max-width:min(1280px,100%);max-height:100%}
 .tv-lightbox-frame img{max-width:100%;max-height:calc(100vh - 112px)}
 .tv-lightbox--wm .tv-lightbox-frame::after{min-width:52px;top:10px;right:10px}
+
+/* ---------- Lộ trình (tv-route): các chặng nối bằng đường chấm; PC nằm ngang, mobile dọc ---------- */
+.post-detail-body ol.tv-route{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:18px 0 26px;padding:22px 16px 18px;list-style:none;border-radius:18px;background:var(--color-cream);border:1px solid rgba(7,69,190,.12)}
+.post-detail-body ol.tv-route::before{content:"";position:absolute;left:10%;right:10%;top:44px;border-top:3px dashed rgba(7,69,190,.35)}
+.post-detail-body .tv-route-stop{position:relative;margin:0;padding:0;text-align:center}
+.tv-route-dot{position:relative;z-index:1;width:44px;height:44px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;background:var(--color-primary);color:#fff;font-weight:800;font-size:16px;box-shadow:0 0 0 5px var(--color-cream),0 6px 14px rgba(7,69,190,.25)}
+.tv-route-stop--end .tv-route-dot{background:var(--color-accent);color:var(--color-primary)}
+.tv-route-dot svg{width:22px;height:22px}
+.post-detail-body .tv-route-stop h4{margin:0 0 4px;font-size:15px;line-height:1.3;color:var(--color-primary)}
+.post-detail-body .tv-route-stop p{margin:0;font-size:13.5px;line-height:1.45;color:var(--color-text-muted)}
+@media (max-width:640px){
+  .post-detail-body ol.tv-route{grid-template-columns:1fr;gap:14px;padding:18px 16px}
+  .post-detail-body ol.tv-route::before{left:37px;right:auto;top:30px;bottom:30px;border-top:0;border-left:3px dashed rgba(7,69,190,.35)}
+  .post-detail-body .tv-route-stop{display:grid;grid-template-columns:44px 1fr;column-gap:14px;text-align:left;align-items:center}
+  .tv-route-dot{grid-row:span 2;margin:0}
+}
+
+/* Gallery ảnh ngang (tv-gallery--wide): 2 ảnh/hàng, khung 4:3 để thấy trọn cảnh */
+.tv-gallery--wide .tv-gallery-item{flex-basis:calc((100% - 12px)/2)}
+.tv-gallery--wide .tv-gallery-media{aspect-ratio:4/3}
+@media (max-width:640px){.tv-gallery--wide .tv-gallery-item{flex-basis:86%}}
