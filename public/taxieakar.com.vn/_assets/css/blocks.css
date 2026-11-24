@@ -354,3 +354,7 @@
 .tv-gallery--wide .tv-gallery-item{flex-basis:calc((100% - 12px)/2)}
 .tv-gallery--wide .tv-gallery-media{aspect-ratio:4/3}
 @media (max-width:640px){.tv-gallery--wide .tv-gallery-item{flex-basis:86%}}
+/* Caption đầy đủ nằm dưới ảnh (không đè lên ảnh) */
+.tv-gallery--wide .tv-gallery-media::after{display:none}
+.tv-gallery--wide .tv-gallery-cap{position:static;margin:8px 2px 0 !important;color:var(--color-text);font-size:14px;line-height:1.5;font-weight:400;text-shadow:none}
+.tv-gallery--wide .tv-gallery-btn{top:calc(50% - 60px)}
